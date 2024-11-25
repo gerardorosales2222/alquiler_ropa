@@ -1,14 +1,24 @@
 from django.db import models
 from django.core.validators import RegexValidator
 
+class Localidad(models.Model):
+    nombre = models.CharField(max_length=50, null=False, verbose_name='Nombre')
+    provincia = models.CharField(max_length=20, null=False, verbose_name='Provincia')
+    def __str__(self):
+        return f'{self.nombre}'
+    class Meta:
+        db_table = 'localidad'
+        verbose_name = 'localidad'
+        verbose_name_plural = 'localidades'
+
+
 class Cliente(models.Model):
-    dni = models.CharField(max_length=8, unique=True, verbose_name='DNI',
-                           validators=[RegexValidator(r'^\d{8}$', message='El DNI debe tener 8 dígitos.')])
     nombre = models.CharField(max_length=50, null=False, verbose_name='Nombre')
     apellido = models.CharField(max_length=50, null=False, verbose_name='Apellido')
-    telefono = models.CharField(max_length=12, blank=True, verbose_name='Teléfono',
-                                validators=[RegexValidator(r'^\+(?:\d{1,3}\s)?\d{10,12}$|^\(\d{3}\)\s?\d{3}-\d{4}$', message='Número de teléfono inválido.')])
-    fecha_nacimiento = models.DateField(null=True, blank=True, verbose_name='Fecha de nacimiento')
+    telefono = models.CharField(max_length=12, blank=True, verbose_name='Teléfono',)
+    direccion = models.CharField(max_length=50, blank=True, verbose_name='Dirección',)
+    localidad = models.ForeignKey(Localidad, on_delete=models.CASCADE, default=1, related_name='Localidad')
+    dni = models.CharField(max_length=8, unique=True, verbose_name='DNI',null=True, blank=True)
     GENERO_CHOICES = [
         ('F', 'Femenino'),
         ('M', 'Masculino'),
@@ -18,7 +28,7 @@ class Cliente(models.Model):
     observacion = models.CharField(max_length=400, blank=True, verbose_name='Observación')
 
     def __str__(self):
-        return f'{self.dni}, {self.apellido}, {self.nombre}'
+        return f'{self.apellido}, {self.nombre}'
 
     class Meta:
         db_table = 'cliente'
@@ -31,6 +41,11 @@ class Categoria(models.Model):
 
     def __str__(self):
         return self.nombre        
+    class Meta:
+        db_table = 'categoria'
+        verbose_name = 'categiria'
+        verbose_name_plural = 'categorias'
+    
 
 class Prenda(models.Model):
     nombre = models.CharField(max_length=100)
@@ -52,7 +67,7 @@ class Prenda(models.Model):
         
 class Alquiler(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='alquileres')
-    prenda = models.ForeignKey('Prenda', on_delete=models.CASCADE, related_name='alquileres')  # Suponiendo que tienes un modelo Prenda
+    prenda = models.ForeignKey('Prenda', on_delete=models.CASCADE, related_name='alquileres')
     fecha_alquiler = models.DateField(auto_now_add=True)
     fecha_devolucion = models.DateField()
     precio_alquiler = models.DecimalField(max_digits=10, decimal_places=2)

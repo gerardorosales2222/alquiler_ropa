@@ -5,6 +5,12 @@ admin.site.site_header = 'Graciela Ferrer'
 admin.site.index_title = 'Panel de control'
 admin.site.site_title = 'Administración de Alquileres de Prendas'
 
+@admin.register(Localidad)
+class ClientesAdmin(admin.ModelAdmin):
+    list_display = ('id', 'nombre','provincia')
+    search_fields = ('id', 'nombre','provincia') 
+    list_filter =  ('id', 'nombre','provincia') 
+
 @admin.register(Cliente)
 class ClientesAdmin(admin.ModelAdmin):
     list_display = ('dni', 'apellido','nombre')
