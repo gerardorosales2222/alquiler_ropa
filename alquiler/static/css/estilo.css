@@ -1,0 +1,43 @@
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/Montserrat-Thin.woff2') format('woff2');
+    font-weight: 250; 
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/Montserrat-Light.woff2') format('woff2');
+    font-weight: 70;
+    font-style: normal;
+}
+
+body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    background-color: #2e2e2e;
+    color: #FFF;
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(10, 7, 6, 0.1) 100%), url('../img/tela.jpg');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+h1{
+    font-size: 70px;
+    font-weight: 350;
+    margin: -20px 0;
+}
+
+h2{
+    font-size: 40px;
+    font-weight: 70;
+}
+
+main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
