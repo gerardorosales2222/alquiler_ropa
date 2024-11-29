@@ -1,5 +1,7 @@
 from django.db import models
+from django import forms
 from django.core.validators import RegexValidator
+from django.forms import ValidationError
 
 class Localidad(models.Model):
     nombre = models.CharField(max_length=50, null=False, verbose_name='Nombre')
@@ -33,51 +35,62 @@ class Cliente(models.Model):
     class Meta:
         db_table = 'cliente'
         verbose_name = 'cliente'
-        verbose_name_plural = 'Clientes'
- 
+        verbose_name_plural = 'clientes'
+
+class Color(models.Model):
+    nombre = models.CharField(max_length=100, default='Desconocido')
+    def __str__(self):
+        return self.nombre
+    class Meta:
+        db_table = 'color'
+        verbose_name = 'color'
+        verbose_name_plural = 'colores'
+
 class Categoria(models.Model):
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField(blank=True)
 
     def __str__(self):
-        return self.nombre        
+        return self.nombre
     class Meta:
         db_table = 'categoria'
         verbose_name = 'categiria'
         verbose_name_plural = 'categorias'
-    
 
 class Prenda(models.Model):
-    nombre = models.CharField(max_length=100)
-    descripcion = models.TextField()
-    precio = models.DecimalField(max_digits=10, decimal_places=2)
+    nro_articulo = models.AutoField(primary_key=True)
     categoria = models.ForeignKey('Categoria', on_delete=models.CASCADE)
+    color = models.ForeignKey('Color', on_delete=models.CASCADE, default=1)
+    descripcion = models.TextField(max_length=20, null=True, blank=True)
     busto = models.IntegerField(null=True, blank=True)
     cintura = models.IntegerField(null=True, blank=True)
     cadera = models.IntegerField(null=True, blank=True)
+    largo = models.IntegerField(null=True, blank=True, verbose_name='Largo(cm)',)
     talle = models.CharField(max_length=20, null=True, blank=True)
-    
+    relacionadas = models.ManyToManyField('self', blank=True, verbose_name='Relacionadas',)
+
     def __str__(self):
-        return self.nombre
+        return f'{self.nro_articulo}, {self.categoria}, {self.color}'
 
     class Meta:
         db_table = 'prenda'
         verbose_name = 'prenda'
         verbose_name_plural = 'prendas'
-        
+
 class Alquiler(models.Model):
-    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='alquileres')
-    prenda = models.ForeignKey('Prenda', on_delete=models.CASCADE, related_name='alquileres')
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    prenda = models.ManyToManyField(Prenda)
     fecha_alquiler = models.DateField(auto_now_add=True)
     fecha_devolucion = models.DateField()
     precio_alquiler = models.DecimalField(max_digits=10, decimal_places=2)
     estado = models.CharField(max_length=20, choices=[
-        ('pendiente', 'Pendiente'),
+        ('reservado', 'Reservado'),
         ('alquilado', 'Alquilado'),
-        ('devuelto', 'Devuelto')
-    ], default='pendiente')
+        ('devuelto', 'Devuelto'),
+        ('limpieza', 'Limpieza'),
+    ], default='alquilado') 
     seña = models.DecimalField(max_digits=10, decimal_places=2)
-    
+
     def __str__(self):
         return f'{self.prenda}, {self.cliente.nombre}, {self.cliente.apellido}, {self.nombre}'
 
