@@ -35,8 +35,17 @@ class PrendaAdmin(admin.ModelAdmin):
     search_fields = ('categoria','color','descripcion') 
     list_filter = ('categoria','color','descripcion') 
 
-@admin.register(Alquiler)
+class PrendaInline(admin.TabularInline):
+    model = Alquiler.prenda.through
+    extra = 1
+
 class AlquilerAdmin(admin.ModelAdmin):
-    list_display = ('fecha_alquiler','estado')
-    search_fields = ('fecha_alquiler',) 
-    list_filter = ('fecha_alquiler',)
+    list_display = ('cliente', 'mostrar_prendas', 'fecha_alquiler', 'fecha_devolucion', 'precio_alquiler', 'estado', 'seña', 'usuario')
+    exclude = ('usuario',)
+
+    def save_model(self, request, obj, form, change):
+        if not obj.pk:  # Solo asignar usuario si es un nuevo objeto
+            obj.usuario = request.user
+        super().save_model(request, obj, form, change)
+
+admin.site.register(Alquiler, AlquilerAdmin)
