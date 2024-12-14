@@ -42,27 +42,29 @@ class PrendaInline(admin.TabularInline):
 
 @admin.register(Pantalon)
 class PantalonAdmin(admin.ModelAdmin):
-    list_display = ('color_pantalon','talle_pantalon')
-    search_fields = ('color_pantalon','talle_pantalon')
+    list_display = ('color_pantalon','talle_pantalon', 'traje')
+    search_fields = ('color_pantalon','talle_pantalon','traje')
     list_filter = ('color_pantalon','talle_pantalon')
 
 @admin.register(Saco)
 class SacoAdmin(admin.ModelAdmin):
-    list_display = ('color_saco','talle_saco')
-    search_fields = ('color_saco','talle_saco')
+    list_display = ('color_saco','talle_saco','traje')
+    search_fields = ('color_saco','talle_saco','traje')
     list_filter = ('color_saco','talle_saco')
 
 @admin.register(Traje)
 class TrajeAdmin(admin.ModelAdmin):
-    list_display = ('nro_articulo','pantalon','saco')
+    list_display = ('nro_articulo', 'mostrar_pantalon', 'mostrar_saco')
     search_fields = ('nro_articulo',)
     list_filter = ('nro_articulo',)
 
 class AlquilerAdmin(admin.ModelAdmin):
-    list_display = ('cliente', 'mostrar_prendas', 'fecha_alquiler', 'precio_alquiler', 'estado', 'seña', 'usuario')
+    list_display = ('cliente', 'mostrar_prendas', 'mostrar_trajes','mostrar_pantalones','mostrar_sacos','fecha_alquiler', 'precio_alquiler', 'estado', 'seña', 'usuario')
     exclude = ('usuario',)
 
     def save_model(self, request, obj, form, change):
         if not obj.pk:  # Solo asignar usuario si es un nuevo objeto
             obj.usuario = request.user
         super().save_model(request, obj, form, change)
+        
+admin.site.register(Alquiler, AlquilerAdmin)

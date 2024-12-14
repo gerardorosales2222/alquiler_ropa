@@ -70,6 +70,7 @@ class Prenda(models.Model):
     largo = models.IntegerField(null=True, blank=True, verbose_name='Largo(cm)',)
     talle = models.CharField(max_length=20, null=True, blank=True)
     relacionadas = models.ManyToManyField('self', blank=True, verbose_name='Relacionadas',)
+    disponible = models.BooleanField(default=True)
 
     def __str__(self):
         return f'nro_artículo: {self.id}, {self.categoria}, {self.color}, {self.talle}'
@@ -84,9 +85,33 @@ class Prenda(models.Model):
         verbose_name = 'prenda'
         verbose_name_plural = 'prendas'
 
+    
+class Traje(models.Model):
+    nro_articulo = models.CharField(max_length=20, unique=True)
+    
+    def mostrar_pantalon(self):
+        pantalon = self.pantalon_set.first()
+        return f'{pantalon.id}.- Talle {pantalon.talle_pantalon} - {pantalon.color_pantalon}' if pantalon else 'No asociado'
+    mostrar_pantalon.short_description = 'Pantalón'
+
+    def mostrar_saco(self):
+        saco = self.saco_set.first()
+        return f'{saco.id}.- {saco.talle_saco} - {saco.color_saco}' if saco else 'No asociado'
+    mostrar_saco.short_description = 'Saco'
+    
+    def __str__(self):
+        return f'{self.nro_articulo}'
+    
+    class Meta:
+        db_table = 'traje'
+        verbose_name = 'traje'
+        verbose_name_plural = 'trajes'
+
 class Pantalon(models.Model):
     color_pantalon = models.ForeignKey('Color', on_delete=models.CASCADE, default=1)
     talle_pantalon = models.CharField(max_length=20, null=True, blank=True)
+    traje = models.ForeignKey('Traje', on_delete=models.CASCADE, default=1)
+    disponible = models.BooleanField(default=True)
 
     def __str__(self):
         return f'{self.id},{self.color_pantalon}, {self.talle_pantalon}'    
@@ -100,7 +125,9 @@ class Pantalon(models.Model):
 class Saco(models.Model):
     color_saco = models.ForeignKey('Color', on_delete=models.CASCADE, default=1)
     talle_saco = models.CharField(max_length=20, null=True, blank=True)
-
+    traje = models.ForeignKey('Traje', on_delete=models.CASCADE, default=1)
+    disponible = models.BooleanField(default=True)
+    
     def __str__(self):
         return f'{self.id},{self.color_saco}, {self.talle_saco}'
 
@@ -108,38 +135,59 @@ class Saco(models.Model):
         db_table = 'saco'
         verbose_name = 'saco'
         verbose_name_plural = 'sacos'
-    
-class Traje(models.Model):
-    nro_articulo = models.CharField(max_length=20, unique=True)
-    pantalon = models.OneToOneField(Pantalon, on_delete=models.CASCADE)
-    saco = models.OneToOneField(Saco, on_delete=models.CASCADE)
-    
-    class Meta:
-        db_table = 'traje'
-        verbose_name = 'traje'
-        verbose_name_plural = 'trajes'
 
 class Alquiler(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
-    prenda = models.ManyToManyField(Prenda)
-    traje = models.ManyToManyField(Traje)
+    prenda = models.ManyToManyField(Prenda, blank=True)
+    saco = models.ManyToManyField(Saco, blank=True)
+    pantalon = models.ManyToManyField(Pantalon, blank=True)
+    traje = models.ManyToManyField(Traje, blank=True)
     fecha_alquiler = models.DateField()
     precio_alquiler = models.DecimalField(max_digits=10, decimal_places=2)
     estado = models.CharField(max_length=20, choices=[
         ('reservado', 'Reservado'),
         ('alquilado', 'Alquilado'),
-        ('limpieza', 'Limpieza'),
-    ], default='alquilado')
-    seña = models.DecimalField(max_digits=10, decimal_places=2)
+    ], default='reservado')
+    seña = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True)
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    def save(self, *args, **kwargs):
+        # Primero guarda el objeto Alquiler para obtener un ID
+        super().save(*args, **kwargs)
+        
+        # Luego verifica la disponibilidad de los pantalones y sacos
+        for pantalon in self.pantalon.all():
+            if not pantalon.disponible:
+                raise ValueError(f'El pantalón {pantalon} no está disponible para alquilar.')
+            pantalon.disponible = False
+            pantalon.save()
+
+        for saco in self.saco.all():
+            if not saco.disponible:
+                raise ValueError(f'El saco {saco} no está disponible para alquilar.')
+            saco.disponible = False
+            saco.save()
+    
+    
 
     def mostrar_prendas(self):
         return ", ".join([p.descripcion for p in self.prenda.all()])
-    
     mostrar_prendas.short_description = 'Prendas'
+    
+    def mostrar_trajes(self):
+        return ", ".join([f'{t.nro_articulo} (P {t.mostrar_pantalon()} | S {t.mostrar_saco()})' for t in self.traje.all()])
+    mostrar_trajes.short_description = 'Traje/s'
+    
+    def mostrar_pantalones(self):
+        return ", ".join([f'Talle {p.talle_pantalon}, {p.color_pantalon}, Traje {p.traje}' for p in self.pantalon.all()])
+    mostrar_pantalones.short_description = 'Pantalon/es'
+    
+    def mostrar_sacos(self):
+        return ", ".join([f'Talle {s.talle_saco}, {s.color_saco}, Traje {s.traje}' for s in self.saco.all()])
+    mostrar_sacos.short_description = 'Saco/s'
 
     def __str__(self):
-        return f'{self.prenda}, {self.cliente.nombre}, {self.cliente.apellido}, {self.fecha_devolucion}'
+        return f'{self.fecha_alquiler}, {self.estado}, {self.cliente.nombre}, {self.cliente.apellido}'
 
     class Meta:
         db_table = 'alquiler'
