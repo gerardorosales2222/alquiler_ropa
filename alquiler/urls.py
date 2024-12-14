@@ -3,5 +3,5 @@ from alquiler import views
 
 urlpatterns = [
     path('',views.index, name='index'),
-    path('colores/',views.colores, name='colores'),
+    path('login/',views.colores, name='login'),
 ]

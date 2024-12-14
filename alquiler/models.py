@@ -41,7 +41,7 @@ class Cliente(models.Model):
         verbose_name_plural = 'clientes'
 
 class Color(models.Model):
-    nombre = models.CharField(max_length=100, default='Desconocido')
+    nombre = models.CharField(max_length=100)
     def __str__(self):
         return self.nombre
     class Meta:
@@ -61,7 +61,6 @@ class Categoria(models.Model):
         verbose_name_plural = 'categorias'
 
 class Prenda(models.Model):
-    nro_articulo = models.AutoField(primary_key=True)
     categoria = models.ForeignKey('Categoria', on_delete=models.CASCADE)
     color = models.ForeignKey('Color', on_delete=models.CASCADE, default=1)
     descripcion = models.TextField(max_length=60, null=True, blank=True)
@@ -73,24 +72,62 @@ class Prenda(models.Model):
     relacionadas = models.ManyToManyField('self', blank=True, verbose_name='Relacionadas',)
 
     def __str__(self):
-        return f'{self.nro_articulo}, {self.categoria}, {self.color}'
+        return f'nro_artículo: {self.id}, {self.categoria}, {self.color}, {self.talle}'
+
+    def nro_articulo(self):
+        return self.id
+
+    nro_articulo.short_description = 'Número de Artículo'
 
     class Meta:
         db_table = 'prenda'
         verbose_name = 'prenda'
-        verbose_name_plural = 'prendas'  
+        verbose_name_plural = 'prendas'
 
+class Pantalon(models.Model):
+    color_pantalon = models.ForeignKey('Color', on_delete=models.CASCADE, default=1)
+    talle_pantalon = models.CharField(max_length=20, null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.id},{self.color_pantalon}, {self.talle_pantalon}'    
+    
+    class Meta:
+        db_table = 'pantalon'
+        verbose_name = 'pantalon'
+        verbose_name_plural = 'pantalones'
+
+
+class Saco(models.Model):
+    color_saco = models.ForeignKey('Color', on_delete=models.CASCADE, default=1)
+    talle_saco = models.CharField(max_length=20, null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.id},{self.color_saco}, {self.talle_saco}'
+
+    class Meta:
+        db_table = 'saco'
+        verbose_name = 'saco'
+        verbose_name_plural = 'sacos'
+    
+class Traje(models.Model):
+    nro_articulo = models.CharField(max_length=20, unique=True)
+    pantalon = models.OneToOneField(Pantalon, on_delete=models.CASCADE)
+    saco = models.OneToOneField(Saco, on_delete=models.CASCADE)
+    
+    class Meta:
+        db_table = 'traje'
+        verbose_name = 'traje'
+        verbose_name_plural = 'trajes'
 
 class Alquiler(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     prenda = models.ManyToManyField(Prenda)
-    fecha_alquiler = models.DateField(auto_now_add=True)
-    fecha_devolucion = models.DateField()
+    traje = models.ManyToManyField(Traje)
+    fecha_alquiler = models.DateField()
     precio_alquiler = models.DecimalField(max_digits=10, decimal_places=2)
     estado = models.CharField(max_length=20, choices=[
         ('reservado', 'Reservado'),
         ('alquilado', 'Alquilado'),
-        ('devuelto', 'Devuelto'),
         ('limpieza', 'Limpieza'),
     ], default='alquilado')
     seña = models.DecimalField(max_digits=10, decimal_places=2)
