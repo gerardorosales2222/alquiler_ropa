@@ -5,6 +5,11 @@
     <header class="inicio">
         <h1>Graciela Ferrer Alta Moda</h1>
         <h2>Sistema de Gestión</h2>
+        {% if request.user.is_authenticated %}
+            <span class="navbar-text"> Usuario actual: {{ user.username }}</span>
+        {% else %}
+            <a class="nav-link active" href="{% url 'login' %}">Ingresar al sistema</a>
+        {% endif %}
     </header>
 </main>
 {% endblock %}

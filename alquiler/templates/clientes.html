@@ -2,21 +2,21 @@
 {% block title %}Clientes{% endblock %}
 {% block content %}
 <main class="container">
-    <h1>Clientes</h1>
+    <div class="extremos">
+        <h1>Clientes</h1>
+        <ul> {% for cliente in clientes %} 
+            {% empty %}
+             <span class="alert alert-light" role="alert">No se encontraron clientes con ese nombre o apellido</li> 
+            {% endfor %} 
+        </ul>
+    </div>
     <div class="extremos">
         <span>Use el buscador para encontrar el cliente sobre el que quiera operar</span>
         <form action="{% url 'clientes' %}" method="get">
             <input type="search" name="q" value="{{ query }}" placeholder="Nombre o Apellido">
-            <button class="btn btn-secondary" type="submit">Buscar</button>
+            <button class="btn btn-primary" type="submit">Buscar</button>
         </form>
     </div>
-
-    <ul> {% for cliente in clientes %} 
-        
-        {% empty %}
-         <li>No se encontraron clientes con ese nombre o apellido</li> 
-        {% endfor %} 
-    </ul>
 
     <br>
     <table class="table table-striped">
@@ -37,8 +37,8 @@
               <td>{{ cliente.nombre }}</td>
               <td>{{ cliente.apellido }}</td>
               <td>{{ cliente.telefono }}</td>
-              <th>{{ cliente.direccion }}</th>
-              <th>{{ cliente.localidad }}</th>
+              <td>{{ cliente.direccion }}</td>
+              <td>{{ cliente.localidad }}</td>
           </tr>
           {% endfor %}
         </tbody>

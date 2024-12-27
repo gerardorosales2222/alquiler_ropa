@@ -1,5 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import *
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
+
 
 def index(request):
     return render(request, 'index.html')
@@ -7,6 +10,11 @@ def index(request):
 def login(request):
     return render(request, 'login.html')
 
+def exit(request):
+    logout(request)
+    return redirect('index')
+
+@login_required
 def clientes(request):
     query = request.GET.get('q', '')
     if query:
@@ -15,3 +23,5 @@ def clientes(request):
         clientes = Cliente.objects.all()
     
     return render(request, 'clientes.html', {'clientes': clientes, 'query': query})
+
+

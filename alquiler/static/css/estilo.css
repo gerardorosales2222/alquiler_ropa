@@ -44,20 +44,5 @@ h2{
 .extremos{
     display: flex;
     justify-content: space-between;
-}
-
-.navbar {
-    background-color: #333;
-}
-  
-.navbar-brand {
-    color: white;
-}
-  
-.nav-link {
-    color: white;
-}
-  
-.nav-link:hover {
-    background-color: #555;
+    align-items: center;
 }
