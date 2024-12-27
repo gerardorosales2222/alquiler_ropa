@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+{% block title %}Trajes{% endblock %}
+{% block content %}
+<main class="container">
+    <div class="extremos">
+        <h1>Trajes</h1>
+        <ul> {% for traje in trajes %} 
+            {% empty %}
+             <span class="alert alert-light" role="alert">No se encontró traje con ese nro de artículo</li> 
+            {% endfor %} 
+        </ul>
+    </div>
+    <div class="extremos">
+        <span>Use el buscador para encontrar el traje por número de artículo</span>
+        <form action="{% url 'trajes' %}" method="get">
+            <input type="search" name="q" value="{{ query }}" placeholder="Nro Artículo">
+            <button class="btn btn-primary" type="submit">Buscar</button>
+        </form>
+    </div>
+
+    <br>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Nro Artículo</th>
+                <th scope="col">Pantalón</th>
+                <th scope="col">Saco</th>
+            </tr>
+        </thead>
+        <tbody>
+          {% for traje in trajes %}
+          <tr>
+              <td>{{ traje.nro_articulo }}</td>
+              <td>{{ traje.mostrar_pantalon }}</td>
+              <td>{{ traje.mostrar_saco }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+</main>
+{% endblock %}

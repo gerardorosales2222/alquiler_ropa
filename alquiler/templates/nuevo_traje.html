@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+{% block title %}Nuevo Traje{% endblock %}
+{% block content %}
+<main class="container">
+    <h1>Nuevo Traje</h1>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <h2>Datos del Traje</h2>
+        {{ traje_form.as_p }}
+        
+        <h2>Datos del Pantalón</h2>
+        {{ pantalon_form.as_p }}
+        
+        <h2>Datos del Saco</h2>
+        {{ saco_form.as_p }}
+        
+        <button class="btn btn-primary" type="submit">Guardar</button>
+    </form>
+</main>
+{% endblock %}
