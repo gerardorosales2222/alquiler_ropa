@@ -1,0 +1,47 @@
+{% extends 'layout.html' %}
+{% block title %}Clientes{% endblock %}
+{% block content %}
+<main class="container">
+    <h1>Clientes</h1>
+    <div class="extremos">
+        <span>Use el buscador para encontrar el cliente sobre el que quiera operar</span>
+        <form action="{% url 'clientes' %}" method="get">
+            <input type="search" name="q" value="{{ query }}" placeholder="Nombre o Apellido">
+            <button class="btn btn-secondary" type="submit">Buscar</button>
+        </form>
+    </div>
+
+    <ul> {% for cliente in clientes %} 
+        
+        {% empty %}
+         <li>No se encontraron clientes con ese nombre o apellido</li> 
+        {% endfor %} 
+    </ul>
+
+    <br>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Código</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Apellido</th>
+                <th scope="col">Teléfono</th>
+                <th scope="col">Dirección</th>
+                <th scope="col">Localidad</th>
+            </tr>
+        </thead>
+        <tbody>
+          {% for cliente in clientes %}
+          <tr>
+              <td>{{ cliente.id }}</td>
+              <td>{{ cliente.nombre }}</td>
+              <td>{{ cliente.apellido }}</td>
+              <td>{{ cliente.telefono }}</td>
+              <th>{{ cliente.direccion }}</th>
+              <th>{{ cliente.localidad }}</th>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+</main>
+{% endblock %}

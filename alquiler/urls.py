@@ -1,7 +1,8 @@
 from django.urls import path
-from alquiler import views
+from . import views
 
 urlpatterns = [
     path('',views.index, name='index'),
-    path('login/',views.colores, name='login'),
+    path('login/',views.login, name='login'),
+    path('clientes/',views.clientes, name='clientes'),
 ]
