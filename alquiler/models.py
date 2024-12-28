@@ -151,7 +151,6 @@ class Alquiler(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     
     def save(self, *args, **kwargs):
-        # Primero guarda el objeto Alquiler para obtener un ID
         super().save(*args, **kwargs)
         
         # Luego verifica la disponibilidad de los pantalones y sacos
@@ -166,8 +165,6 @@ class Alquiler(models.Model):
                 raise ValueError(f'El saco {saco} no está disponible para alquilar.')
             saco.disponible = False
             saco.save()
-    
-    
 
     def mostrar_prendas(self):
         return ", ".join([p.descripcion for p in self.prenda.all()])

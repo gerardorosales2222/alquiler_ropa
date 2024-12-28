@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+{% block title %}Clientes{% endblock %}
+{% block content %}
+<main class="container">
+    <h1>Lista de Alquileres</h1>
+    <div class="mb-3"> 
+        <a href="{% url 'registrar_alquiler' %}" class="btn btn-primary">Registrar Alquiler</a> 
+        <a href="{% url 'registrar_devolucion' 0 %}" class="btn btn-primary">Registrar Devolución</a>
+        <a href="{% url 'lista_alquileres' %}"><button class="btn btn-primary" type="submit">Listar Fechas Cercanas</button></a>
+        <a href="{% url 'lista_alquileres' %}?ver_todos=1"><button class="btn btn-primary" type="submit">Listar Todos</button></a>
+    </div>
+    <div class="extremos">
+        <span>Use el buscador para encontrar alquileres</span>
+        <form action="{% url 'lista_alquileres' %}" method="get">
+            <input type="date" id="fecha" name="fecha" value="{{ query_date }}" >
+            <button class="btn btn-primary" type="submit">Buscar</button>
+        </form>
+    </div>
+    <br>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Cliente</th>
+                <th scope="col">Prenda</th>
+                <th scope="col">Traje</th>
+                <th scope="col">Pantalón</th>
+                <th scope="col">Saco</th>
+                <th scope="col">Seña</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Usuario</th>
+            </tr>
+        </thead>
+        <tbody>
+          {% for alquiler in alquileres %}
+          <tr>
+              <td>{{ alquiler.id }}</td>
+              <td>{{ alquiler.fecha_alquiler }}</td>
+              <td>{{ alquiler.cliente }}</td>
+              <td>{{ alquiler.mostrar_prendas }}</td>
+              <td>{{ alquiler.mostrar_trajes }}</td>
+              <td>{{ alquiler.mostrar_pantalones }}</td>
+              <td>{{ alquiler.mostrar_sacos }}</td>
+              <td>{{ alquiler.seña }}</td>
+              <td>{{ alquiler.estado }}</td>
+              <td>{{ alquiler.usuario }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+</main>
+{% endblock %}

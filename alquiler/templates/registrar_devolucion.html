@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}
+{% block title %}Clientes{% endblock %}
+{% block content %}
+<main class="container">
+    <h1>Registrar Devolución</h1>
+    <form method="post"> {% csrf_token %} 
+        <p>¿Está seguro de que desea registrar la devolución de este alquiler?</p> 
+        <button type="submit">Registrar Devolución</button>
+    </form>    
+</main>
+{% endblock %}

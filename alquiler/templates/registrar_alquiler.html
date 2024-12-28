@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}
+{% block title %}Registrar Alquilar{% endblock %}
+{% block content %}
+<main class="container">
+    <br>
+    <h1>Registrar Alquiler</h1>
+    <form method="post"> {% csrf_token %} {{ form.as_p }} 
+        <button type="submit">Registrar</button> 
+    </form>    
+</main>
+{% endblock %}

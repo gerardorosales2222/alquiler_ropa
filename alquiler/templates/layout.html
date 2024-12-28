@@ -24,7 +24,7 @@
               <a class="nav-link" href="{% url 'clientes' %}">Clientes</a>
               <a class="nav-link" href="{% url 'prendas' %}">Prendas</a>
               <a class="nav-link" href="{% url 'trajes' %}">Trajes</a>
-              <a class="nav-link" href="#">Alquileres</a>
+              <a class="nav-link" href="{% url 'lista_alquileres' %}">Alquileres</a>
               <span class="navbar-text"> | Usuario actual: {{ user.username }}</span>
               <a class="nav-link" href="{% url 'salir' %}">Salir</a>
           {% else %}
