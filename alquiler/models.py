@@ -91,12 +91,12 @@ class Traje(models.Model):
     
     def mostrar_pantalon(self):
         pantalon = self.pantalon_set.first()
-        return f'{pantalon.id}.- Talle {pantalon.talle_pantalon} - {pantalon.color_pantalon}' if pantalon else 'No asociado'
+        return f'{pantalon.id}.- Talle {pantalon.talle_pantalon} - {pantalon.color_pantalon} - Disponible: {pantalon.disponible}' if pantalon else 'No asociado'
     mostrar_pantalon.short_description = 'Pantalón'
 
     def mostrar_saco(self):
         saco = self.saco_set.first()
-        return f'{saco.id}.- {saco.talle_saco} - {saco.color_saco}' if saco else 'No asociado'
+        return f'{saco.id}.- {saco.talle_saco} - {saco.color_saco} - Disponible: {saco.disponible}' if saco else 'No asociado'
     mostrar_saco.short_description = 'Saco'
     
     def __str__(self):
@@ -120,7 +120,6 @@ class Pantalon(models.Model):
         db_table = 'pantalon'
         verbose_name = 'pantalon'
         verbose_name_plural = 'pantalones'
-
 
 class Saco(models.Model):
     color_saco = models.ForeignKey('Color', on_delete=models.CASCADE, default=1)

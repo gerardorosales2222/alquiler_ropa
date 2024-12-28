@@ -1,0 +1,55 @@
+{% extends 'layout.html' %}
+{% block title %}Prendas{% endblock %}
+{% block content %}
+<main class="container">
+    <div class="extremos">
+        <h1>Prendas</h1>
+        <ul> {% for prenda in prendas %} 
+            {% empty %}
+             <span class="alert alert-light" role="alert">No se encontraron prendas con esa descripción</li> 
+            {% endfor %} 
+        </ul>
+    </div>
+    <div class="extremos">
+        <span>Use el buscador para encontrar una prenda por color y/o categoría</span>
+        <form action="{% url 'prendas' %}" method="get">
+            <input type="search" name="q" value="{{ query }}" placeholder="color categoría">
+            <button class="btn btn-primary" type="submit">Buscar</button>
+        </form>
+    </div>
+
+    <br>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Categoría</th>
+                <th scope="col">Color</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Talle</th>
+                <th scope="col">Largo</th>
+                <th scope="col">Busto</th>
+                <th scope="col">Cintura</th>
+                <th scope="col">Cadera</th>
+                <th scope="col">Disponible</th>
+            </tr>
+        </thead>
+        <tbody>
+          {% for prenda in prendas %}
+          <tr>
+              <td>{{ prenda.id }}</td>
+              <td>{{ prenda.categoria }}</td>
+              <td>{{ prenda.color }}</td>
+              <td>{{ prenda.descripcion }}</td>
+              <td>{{ prenda.talle }}</td>
+              <td>{{ prenda.largo }}</td>
+              <td>{{ prenda.busto }}</td>
+              <td>{{ prenda.cintura }}</td>
+              <td>{{ prenda.talle }}</td>
+              <td>{{ prenda.disponible }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+</main>
+{% endblock %}

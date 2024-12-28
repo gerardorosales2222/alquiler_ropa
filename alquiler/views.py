@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import *
 from .forms import *
+from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 
@@ -18,10 +19,15 @@ def exit(request):
 def clientes(request):
     query = request.GET.get('q', '')
     if query:
-        clientes = Cliente.objects.filter(nombre__icontains=query) | Cliente.objects.filter(apellido__icontains=query)
+        terms = query.split()
+        filters = Q()
+        for term in terms:
+            filters |= Q(nombre__icontains=term) | Q(apellido__icontains=term)
+        clientes = Cliente.objects.filter(filters)
     else:
-        clientes = Cliente.objects.all()    
+        clientes = Cliente.objects.all()
     return render(request, 'clientes.html', {'clientes': clientes, 'query': query})
+
 
 @login_required
 def trajes(request):
@@ -47,7 +53,7 @@ def nuevo_traje(request):
             saco.traje = traje
             pantalon.save()
             saco.save()
-            return redirect('trajes')  # Redirigir a la lista de trajes una vez creado
+            return redirect('trajes')
             
     else:
         traje_form = TrajeForm()
@@ -59,3 +65,17 @@ def nuevo_traje(request):
         'pantalon_form': pantalon_form,
         'saco_form': saco_form,
     })
+
+@login_required
+def prendas(request):
+    query = request.GET.get('q', '')
+    if query:
+        terms = query.split()
+        filters = Q()
+        for term in terms:
+            filters |= Q(categoria__nombre__icontains=term) | Q(color__nombre__icontains=term)
+        prendas = Prenda.objects.filter(filters)
+    else:
+        prendas = Prenda.objects.all()
+    
+    return render(request, 'prendas.html', {'prendas': prendas, 'query': query})
