@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from .forms import *
@@ -83,38 +84,28 @@ def prendas(request):
 
 @login_required
 def registrar_alquiler(request):
-    if request.method == 'POST':
-        form = AlquilerForm(request.POST)
-        if form.is_valid():
-            alquiler = form.save(commit=False)
-            alquiler.estado = 'alquilado'
-            alquiler.usuario = request.user  # Asignar el usuario actual
-            alquiler.save()
-            
-            # Guardar las relaciones ManyToMany después de guardar el objeto alquiler
-            form.save_m2m()
-            
-            if alquiler.traje.exists():
-                for traje in alquiler.traje.all():
-                    traje.disponible = False
-                    traje.save()
-            if alquiler.pantalon.exists():
-                for pantalon in alquiler.pantalon.all():
-                    pantalon.disponible = False
-                    pantalon.save()
-            if alquiler.saco.exists():
-                for saco in alquiler.saco.all():
-                    saco.disponible = False
-                    saco.save()
-            if alquiler.prenda.exists():
-                for prenda in alquiler.prenda.all():
-                    prenda.disponible = False
-                    prenda.save()
+    c = Cliente.objects.all()
+#    p = reserva.objects.all()
+#    h = habitación.objects.all()
+    lista = {'clientes': c,}
+#            'reservas':r,
+#            'hab':h,
+#            'clientes':c
+#           }
+    return render(request, 'registrar_alquiler.html',lista)
 
-            return redirect('lista_alquileres')
-    else:
-        form = AlquilerForm()
-    return render(request, 'registrar_alquiler.html', {'form': form})
+
+@login_required
+def guardar_alquiler(request):
+#    id_hab=request.POST['hab']
+#    h=habitación.objects.get(id=id_hab)
+#    id_cli=request.POST['cliente']
+#    c=cliente.objects.get(id=id_cli)
+#    días=request.POST['días']
+#    r = reserva.objects.create(habitación=h,cliente=c,cant_días=días)
+#    h.ocupada='True'
+#    h.save()
+    return redirect('/reservas')
 
 @login_required
 def registrar_devolucion(request, alquiler_id):

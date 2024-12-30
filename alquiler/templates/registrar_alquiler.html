@@ -1,11 +1,25 @@
 {% extends 'layout.html' %}
-{% block title %}Registrar Alquilar{% endblock %}
+{% load static %}
+{% block title %}Registrar Alquiler{% endblock %}
 {% block content %}
 <main class="container">
     <br>
     <h1>Registrar Alquiler</h1>
-    <form method="post"> {% csrf_token %} {{ form.as_p }} 
-        <button type="submit">Registrar</button> 
-    </form>    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="searchInput">Cliente</label>
+            <input type="text" id="searchInput" class="form-control" placeholder="Ingrese una letra">
+            <select id="clientes" name="cliente" class="form-control">
+                {% for cliente in clientes %}
+                    <option value="{{ cliente.id }}">{{ cliente.nombre }} {{ cliente.apellido }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        
+    </form>
 </main>
+<script src="{% static 'js/registrar_alquiler_clientes.js' %}"></script>
 {% endblock %}
