@@ -85,13 +85,9 @@ def prendas(request):
 @login_required
 def registrar_alquiler(request):
     c = Cliente.objects.all()
-#    p = reserva.objects.all()
-#    h = habitación.objects.all()
-    lista = {'clientes': c,}
-#            'reservas':r,
-#            'hab':h,
-#            'clientes':c
-#           }
+    p = Prenda.objects.all()
+    lista = {'clientes': c,
+             'prendas':p,}
     return render(request, 'registrar_alquiler.html',lista)
 
 

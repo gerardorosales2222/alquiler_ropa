@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const input = document.getElementById('searchInput');
+    const input = document.getElementById('searchCliInput');
     const select = document.getElementById('clientes');
     const clientes = Array.from(select.options).map(option => ({ value: option.value, text: option.text }));
 
@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const defaultOption = document.createElement('option');
         defaultOption.value = '';
-    // defaultOption.textContent = '--Seleccione un cliente--';
+        defaultOption.textContent = '--Seleccione un cliente--';
         select.appendChild(defaultOption);
 
         clientes.forEach(cliente => {

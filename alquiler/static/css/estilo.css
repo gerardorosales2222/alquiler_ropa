@@ -41,6 +41,10 @@ h2{
     height: 70vh;
 }
 
+a{
+    text-decoration: none;
+}
+
 .extremos{
     display: flex;
     justify-content: space-between;
