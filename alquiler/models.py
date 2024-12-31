@@ -71,6 +71,8 @@ class Prenda(models.Model):
     talle = models.CharField(max_length=20, null=True, blank=True)
     relacionadas = models.ManyToManyField('self', blank=True, verbose_name='Relacionadas',)
     disponible = models.BooleanField(default=True)
+    tintoreria = models.BooleanField(default=False)
+    reparacion = models.BooleanField(default=False)
 
     def __str__(self):
         return f'nro_artículo: {self.id}, {self.categoria}, {self.color}, {self.talle}'
@@ -112,6 +114,8 @@ class Pantalon(models.Model):
     talle_pantalon = models.CharField(max_length=20, null=True, blank=True)
     traje = models.ForeignKey('Traje', on_delete=models.CASCADE, default=1)
     disponible = models.BooleanField(default=True)
+    tintoreria = models.BooleanField(default=False)
+    reparacion = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.id},{self.color_pantalon}, {self.talle_pantalon}'    
@@ -126,6 +130,8 @@ class Saco(models.Model):
     talle_saco = models.CharField(max_length=20, null=True, blank=True)
     traje = models.ForeignKey('Traje', on_delete=models.CASCADE, default=1)
     disponible = models.BooleanField(default=True)
+    tintoreria = models.BooleanField(default=False)
+    reparacion = models.BooleanField(default=False)
     
     def __str__(self):
         return f'{self.id},{self.color_saco}, {self.talle_saco}'
