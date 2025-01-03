@@ -15,7 +15,7 @@ A continuación se explican los pasos necesarios para configurar el entorno y ej
     ```bash
     git clone https://github.com/gerardorosales2222/alquiler_ropa.git
 
-    cd tu-repositorio
+    cd alquiler_ropa.git
     ```
 
 2. Crea un entorno virtual:
@@ -43,6 +43,15 @@ A continuación se explican los pasos necesarios para configurar el entorno y ej
     ```bash
     pip install -r requirements.txt
     ```
+    
+
+> ### A tener en cuenta para el futuro: 
+> Cada vez que añadas o actualices una dependencia en tu entorno virtual, puedes ejecutar:
+>```bash
+>pip freeze > requirements.txt 
+>```
+>Esto sirve para actualizar el archivo requirements.txt con la lista completa y actualizada de las dependencias del proyecto.
+Actualizar el requirements.txt después de instalar o actualizar paquetes, para asegurarte de que el archivo siempre refleje el estado actual del entorno.
 
 ## Migraciones de la base de datos
 
