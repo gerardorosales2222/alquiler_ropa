@@ -29,10 +29,13 @@ class CategoriaAdmin(admin.ModelAdmin):
 
 @admin.register(Prenda)
 class PrendaAdmin(admin.ModelAdmin):
-    list_display = ('nro_articulo','categoria','color','talle','descripcion')
+    list_display = ('nro_articulo','categoria','color','talle','descripcion', 'disponibilidad')
     search_fields = ('categoria__descripcion','talle','color__nombre','descripcion') 
     autocomplete_fields = ['categoria', 'color'] 
-    exclude = ('disponible',)
+    
+    def disponibilidad(self, obj):
+        return "Sí" if obj.disponible else "NO disponible"
+    disponibilidad.short_description = 'Disponible'
 
 class PrendaInline(admin.TabularInline):
     model = Alquiler.prenda.through
@@ -63,7 +66,7 @@ class TrajeAdmin(admin.ModelAdmin):
 class AlquilerAdmin(admin.ModelAdmin):
     list_display = ('cliente', 'mostrar_prendas', 'mostrar_trajes','mostrar_pantalones','mostrar_sacos','fecha_alquiler', 'precio_alquiler', 'estado', 'seña', 'usuario')
     exclude = ('usuario',)
-    autocomplete_fields = ['cliente']
+    autocomplete_fields = ['cliente','prenda']
 
     def save_model(self, request, obj, form, change):
         if not obj.pk:

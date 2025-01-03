@@ -1,5 +1,6 @@
 {% extends 'layout.html' %}
 {% block title %}Prendas{% endblock %}
+{% load custom_filters %}
 {% block content %}
 <main class="container">
     <div class="extremos">
@@ -46,7 +47,7 @@
               <td>{{ prenda.busto }}</td>
               <td>{{ prenda.cintura }}</td>
               <td>{{ prenda.talle }}</td>
-              <td>{{ prenda.disponible }}</td>
+              <td>{{ prenda.disponible|boolean_to_text }}</td>
           </tr>
           {% endfor %}
         </tbody>
