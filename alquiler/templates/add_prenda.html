@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+{% block title %}Nueva Prenda{% endblock %}
+{% block content %}
+<main class="container">
+    <h1>Nueva Prenda</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="campo">
+            <label>Color de la prenda</label>
+            <input type="text" list="color_list" name="color" class="form-control" placeholder="Color" required>
+            <datalist id="color_list">
+            {% for color in colores %}
+                <option value="{{ color.id }}">{{ color.nombre }}</option>
+            {% endfor %}
+            </datalist>
+        </div>
+        <div class="campo">
+            <label>Categoría</label>
+            <input type="text" list="categoria_list" name="categoria" class="form-control" placeholder="Categoría" required>
+            <datalist id="categoria_list">
+            {% for categoria in categorias %}
+                <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+            {% endfor %}
+            </datalist>
+        </div>
+        <div class="campo">
+            <label>Descripción</label>
+            <input type="text" class="form-control" name="descripcion" placeholder="Descripción">
+        </div>
+        <div class="campo">
+            <label for="busto">Busto</label>
+            <input type="number" id="busto" name="busto" class="form-control" name="busto" placeholder="Busto">
+        </div>    
+        <div class="campo">
+            <label for="cintura">Cintura</label>
+            <input type="number" id="cintura" name="cintura" class="form-control" name="cintura" placeholder="Cintura">
+        </div>    
+        <div class="campo">
+            <label for="cadera">Cadera</label>
+            <input type="number" id="cadera" name="cadera" class="form-control" name="cadera" placeholder="Cadera">
+        </div>    
+        <div class="campo">
+            <label for="largo">Largo(cm)</label>
+            <input type="number" id="largo" name="largo" class="form-control" name="largo" placeholder="Largo">
+        </div>    
+        <div class="campo">
+            <label for="talle">Talle</label>
+            <input type="text" id="talle" name="talle" class="form-control" name="talle" placeholder="Talle">
+        </div>
+        <button class="btn btn-primary" type="submit">Guardar</button>
+    </form>
+</main>
+{% endblock %}

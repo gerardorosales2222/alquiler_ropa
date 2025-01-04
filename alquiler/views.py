@@ -7,7 +7,7 @@ from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-
+from django.http import HttpResponse
 
 
 def index(request):
@@ -21,9 +21,68 @@ def exit(request):
     return redirect('index')
 
 @login_required
-def buscar(request):
-    clientes = Cliente.objects.all()
-    return render(request, 'buscar.html', {'cli':clientes})
+def add_prenda(request):
+    if request.method == 'POST':
+        try:
+            categoria = Categoria.objects.get(id=request.POST['categoria'])
+            color = Color.objects.get(id=request.POST['color'])
+        except KeyError as e:
+            # Maneja el caso en que no se envíen datos del formulario
+            return render(request, 'add_prenda.html', {
+                'categorias': Categoria.objects.all(),
+                'colores': Color.objects.all(),
+                'error_message': f"Error en el formulario: {e}"
+            })
+            
+        descripcion = request.POST.get('descripcion', '')
+        
+        # Usar get y convertir a entero si existe valor, sino dejar como None
+        busto = request.POST.get('busto')
+        busto = int(busto) if busto else None
+        
+        cintura = request.POST.get('cintura')
+        cintura = int(cintura) if cintura else None
+        
+        cadera = request.POST.get('cadera')
+        cadera = int(cadera) if cadera else None
+        
+        largo = request.POST.get('largo')
+        largo = int(largo) if largo else None
+        
+        talle = request.POST.get('talle', None)
+        
+        prenda = Prenda(
+            categoria=categoria,
+            color=color,
+            descripcion=descripcion,
+            busto=busto,
+            cintura=cintura,
+            cadera=cadera,
+            largo=largo,
+            talle=talle,
+            disponible=True,  # Siempre verdadero
+            tintoreria=False,  # Siempre falso
+            reparacion=False,  # Siempre falso
+        )
+        prenda.save()
+
+        return redirect('prendas')  # Redirige a una página de éxito.
+
+    categorias = Categoria.objects.all()
+    colores = Color.objects.all()
+    return render(request, 'add_prenda.html', {'categorias': categorias, 'colores': colores})
+
+
+
+
+
+
+
+
+
+
+
+
 
 @login_required
 def clientes(request):
@@ -91,6 +150,21 @@ def prendas(request):
 
 @login_required
 def registrar_alquiler(request):
+    if request.method == 'POST':
+        cliente_id = request.POST['cliente'].split(' ')[0]
+        cliente = Cliente.objects.get(id=cliente_id)
+
+        prendas_ids = request.POST.getlist('prendas')
+        prendas = [Prenda.objects.get(id=prenda.split(' ')[0]) for prenda in prendas_ids]
+
+        alquiler = Alquiler(cliente=cliente)
+        alquiler.save()
+        
+        for prenda in prendas:
+            alquiler.prendas.add(prenda)
+
+        return HttpResponse('Alquiler registrado con éxito')
+
     clientes = Cliente.objects.all()
     prendas = Prenda.objects.all()
     lista = {'clientes': clientes,
@@ -98,17 +172,8 @@ def registrar_alquiler(request):
     return render(request, 'registrar_alquiler.html',lista)
 
 
-@login_required
-def guardar_alquiler(request):
-#    id_hab=request.POST['hab']
-#    h=habitación.objects.get(id=id_hab)
-#    id_cli=request.POST['cliente']
-#    c=cliente.objects.get(id=id_cli)
-#    días=request.POST['días']
-#    r = reserva.objects.create(habitación=h,cliente=c,cant_días=días)
-#    h.ocupada='True'
-#    h.save()
-    return redirect('/reservas')
+
+
 
 @login_required
 def registrar_devolucion(request, alquiler_id):

@@ -11,11 +11,10 @@ urlpatterns = [
     path('prendas/', views.prendas, name='prendas'),
     
     path('registrar_alquiler/', views.registrar_alquiler, name='registrar_alquiler'),
-    path('guardar_alquiler/', views.guardar_alquiler, name='guardar_alquiler'),
     path('registrar_devolucion/<int:alquiler_id>/', views.registrar_devolucion, name='registrar_devolucion'),
     path('lista_alquileres/', views.lista_alquileres, name='lista_alquileres'),
 
-    path('buscar/', views.buscar, name='buscar'),
+    path('nueva_prenda/', views.add_prenda, name='nueva_prenda'),
 
 ]
 

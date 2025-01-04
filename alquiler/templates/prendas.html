@@ -11,6 +11,7 @@
             {% endfor %} 
         </ul>
     </div>
+    <a href="{% url 'nueva_prenda' %}"><button class="btn btn-primary" type="submit">Nueva Prenda</button></a>
     <div class="extremos">
         <span>Use el buscador para encontrar una prenda por color y/o categoría</span>
         <form action="{% url 'prendas' %}" method="get">

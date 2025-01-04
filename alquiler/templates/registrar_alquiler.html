@@ -2,33 +2,44 @@
 {% load static %}
 {% block title %}Registrar Alquiler{% endblock %}
 {% block content %}
+<!-- Autocomplete Dropdown using HTML5 Datalist -->
 <main class="container">
     <br>
     <h1>Registrar Alquiler</h1>
-    <form method="post">
-        {% csrf_token %}
-        <div class="campo">
-            <label for="cli">Cliente</label>
-            <input id="cli" type="text" list="clientes_list" class="form-control" placeholder="nombre o apellido">
-            <datalist id="clientes_list">
-            {% for cliente in clientes %}
-                <option value="{{ cliente.id }} {{ cliente.nombre }} {{ cliente.apellido }}">
-            {% endfor %}
-            </datalist>
-        </div>
-        <div class="campo">
+<form method="post">
+    {% csrf_token %}
+    <div class="campo">
+        <label for="cli">Cliente</label>
+        <input id="cli" name="cliente" type="text" list="clientes_list" class="form-control" placeholder="nombre o apellido">
+        <datalist id="clientes_list">
+        {% for cliente in clientes %}
+            <option value="{{ cliente.id }} {{ cliente.nombre }} {{ cliente.apellido }}">
+        {% endfor %}
+        </datalist>
+    </div>
+    <div id="prendas-container">
+        <div class="campo prenda-item">
             <label for="prenda">Prenda</label>
-            <input id="prenda" type="text" list="prendas_list" class="form-control" placeholder="cod, categoría o color">
+            <input name="prendas" type="text" list="prendas_list" class="form-control" placeholder="cod, categoría o color">
             <datalist id="prendas_list">
             {% for prenda in prendas %}
                 <option value="{{ prenda.id }} {{ prenda.categoria }} {{ prenda.color }}">
             {% endfor %}
             </datalist>
         </div>
-        
+    </div>
+    <button type="button" onclick="addPrenda()">Agregar Prenda</button>
+    <button class="btn btn-primary" type="submit">Guardar</button>
+</form>
+
+<script>
+    function addPrenda() {
+        var container = document.getElementById('prendas-container');
+        var newPrenda = container.firstElementChild.cloneNode(true);
+        container.appendChild(newPrenda);
+    }
+</script>
 
 
-        
-    </form>
 </main>
 {% endblock %}
