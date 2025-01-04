@@ -54,3 +54,7 @@ button{
     justify-content: space-between;
     align-items: center;
 }
+
+.campo{
+    margin: 10px 0px;
+}

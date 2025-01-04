@@ -7,30 +7,28 @@
     <h1>Registrar Alquiler</h1>
     <form method="post">
         {% csrf_token %}
+        <div class="campo">
+            <label for="cli">Cliente</label>
+            <input id="cli" type="text" list="clientes_list" class="form-control" placeholder="nombre o apellido">
+            <datalist id="clientes_list">
+            {% for cliente in clientes %}
+                <option value="{{ cliente.id }} {{ cliente.nombre }} {{ cliente.apellido }}">
+            {% endfor %}
+            </datalist>
+        </div>
+        <div class="campo">
+            <label for="prenda">Prenda</label>
+            <input id="prenda" type="text" list="prendas_list" class="form-control" placeholder="cod, categoría o color">
+            <datalist id="prendas_list">
+            {% for prenda in prendas %}
+                <option value="{{ prenda.id }} {{ prenda.categoria }} {{ prenda.color }}">
+            {% endfor %}
+            </datalist>
+        </div>
         
-        <div>
-            <label for="searchCliInput">Cliente</label>
-            <input type="text" id="searchCliInput" class="form-control" placeholder="Parte del Nombre o Apellido del cliente">
-            <select id="clientes" name="cliente" class="form-control">
-                {% for cliente in clientes %}
-                    <option value="{{ cliente.id }}">{{ cliente.nombre }} {{ cliente.apellido }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div>
-            <label for="searchPreInput">Prenda</label>
-            <input type="text" id="searchPreInput" class="form-control" placeholder="Ingrese prenda">
-            <select id="prendas" name="prenda" class="form-control">
-                {% for prenda in prendas %}
-                    <option value="{{ prenda.id }}">
-                    {{ prenda.id }} - {{ prenda.categoria }} {{ prenda.color }}
-                    </option>
-                {% endfor %}
-            </select>
-        </div>
+
+
         
     </form>
 </main>
-<script src="{% static 'js/registrar_alquiler_clientes.js' %}"></script>
-<script src="{% static 'js/registrar_alquiler_prendas.js' %}"></script>
 {% endblock %}

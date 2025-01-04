@@ -14,5 +14,8 @@ urlpatterns = [
     path('guardar_alquiler/', views.guardar_alquiler, name='guardar_alquiler'),
     path('registrar_devolucion/<int:alquiler_id>/', views.registrar_devolucion, name='registrar_devolucion'),
     path('lista_alquileres/', views.lista_alquileres, name='lista_alquileres'),
+
+    path('buscar/', views.buscar, name='buscar'),
+
 ]
 

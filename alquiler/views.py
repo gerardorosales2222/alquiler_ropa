@@ -8,6 +8,8 @@ from datetime import timedelta
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 
+
+
 def index(request):
     return render(request, 'index.html')
 
@@ -17,6 +19,11 @@ def login(request):
 def exit(request):
     logout(request)
     return redirect('index')
+
+@login_required
+def buscar(request):
+    clientes = Cliente.objects.all()
+    return render(request, 'buscar.html', {'cli':clientes})
 
 @login_required
 def clientes(request):
@@ -84,10 +91,10 @@ def prendas(request):
 
 @login_required
 def registrar_alquiler(request):
-    c = Cliente.objects.all()
-    p = Prenda.objects.all()
-    lista = {'clientes': c,
-             'prendas':p,}
+    clientes = Cliente.objects.all()
+    prendas = Prenda.objects.all()
+    lista = {'clientes': clientes,
+             'prendas': prendas,}
     return render(request, 'registrar_alquiler.html',lista)
 
 
