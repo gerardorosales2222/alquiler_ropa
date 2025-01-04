@@ -24,10 +24,9 @@ def exit(request):
 def add_prenda(request):
     if request.method == 'POST':
         try:
-            categoria = Categoria.objects.get(id=request.POST['categoria'])
-            color = Color.objects.get(id=request.POST['color'])
+            categoria = Categoria.objects.get(id=request.POST['categoria_id'])
+            color = Color.objects.get(id=request.POST['color_id'])
         except KeyError as e:
-            # Maneja el caso en que no se envíen datos del formulario
             return render(request, 'add_prenda.html', {
                 'categorias': Categoria.objects.all(),
                 'colores': Color.objects.all(),
@@ -36,7 +35,6 @@ def add_prenda(request):
             
         descripcion = request.POST.get('descripcion', '')
         
-        # Usar get y convertir a entero si existe valor, sino dejar como None
         busto = request.POST.get('busto')
         busto = int(busto) if busto else None
         
@@ -66,19 +64,11 @@ def add_prenda(request):
         )
         prenda.save()
 
-        return redirect('prendas')  # Redirige a una página de éxito.
+        return redirect('prendas')
 
     categorias = Categoria.objects.all()
     colores = Color.objects.all()
     return render(request, 'add_prenda.html', {'categorias': categorias, 'colores': colores})
-
-
-
-
-
-
-
-
 
 
 
@@ -141,7 +131,7 @@ def prendas(request):
         terms = query.split()
         filters = Q()
         for term in terms:
-            filters |= Q(categoria__nombre__icontains=term) | Q(color__nombre__icontains=term)
+            filters &= (Q(categoria__nombre__icontains=term) | Q(color__nombre__icontains=term))
         prendas = Prenda.objects.filter(filters)
     else:
         prendas = Prenda.objects.all()

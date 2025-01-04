@@ -6,22 +6,24 @@
     <form method="post">
         {% csrf_token %}
         <div class="campo">
-            <label>Color de la prenda</label>
-            <input type="text" list="color_list" name="color" class="form-control" placeholder="Color" required>
-            <datalist id="color_list">
-            {% for color in colores %}
-                <option value="{{ color.id }}">{{ color.nombre }}</option>
-            {% endfor %}
-            </datalist>
-        </div>
-        <div class="campo">
             <label>Categoría</label>
-            <input type="text" list="categoria_list" name="categoria" class="form-control" placeholder="Categoría" required>
+            <input type="text" list="categoria_list" id="categoria" class="form-control" placeholder="Categoría" required>
             <datalist id="categoria_list">
             {% for categoria in categorias %}
-                <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+                <option value="{{ categoria.nombre }}" data-id="{{ categoria.id }}">{{ categoria.nombre }}</option>
             {% endfor %}
             </datalist>
+            <input type="hidden" name="categoria_id" id="categoria_hidden">
+        </div>
+        <div class="campo">
+            <label>Color de la prenda</label>
+            <input type="text" list="color_list" id="color" class="form-control" placeholder="Color" required>
+            <datalist id="color_list">
+            {% for color in colores %}
+                <option value="{{ color.nombre }}" data-id="{{ color.id }}">{{ color.nombre }}</option>
+            {% endfor %}
+            </datalist>
+            <input type="hidden" name="color_id" id="color_hidden">
         </div>
         <div class="campo">
             <label>Descripción</label>
@@ -50,4 +52,26 @@
         <button class="btn btn-primary" type="submit">Guardar</button>
     </form>
 </main>
+
+<script>
+    function handleDatalistInput(e) {
+        var value = e.target.value;
+        var list = e.target.list;
+        var options = list.childNodes;
+        var hiddenInputId = e.target.id + '_hidden';
+        var hiddenInput = document.getElementById(hiddenInputId);
+
+        if (hiddenInput) {
+            for (var i = 0; i < options.length; i++) {
+                if (options[i].value === value) {
+                    hiddenInput.value = options[i].dataset.id;
+                    break;
+                }
+            }
+        }
+    }
+
+    document.querySelector('#color').addEventListener('input', handleDatalistInput);
+    document.querySelector('#categoria').addEventListener('input', handleDatalistInput);
+</script>
 {% endblock %}

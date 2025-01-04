@@ -49,6 +49,20 @@ button{
     margin: 4px 1px;
 }
 
+.table-secondary{
+    --bs-table-color:#000;
+    --bs-table-bg:#739bff;
+    --bs-table-border-color:#363346;
+    --bs-table-striped-bg:#739bff;  
+    --bs-table-striped-color:#000;
+    --bs-table-active-bg:#739bff;
+    --bs-table-active-color:#000;
+    --bs-table-hover-bg:#739bff;
+    --bs-table-hover-color:#000;
+    color:var(--bs-table-color);
+    border-color:var(--bs-table-border-color)
+}
+
 .extremos{
     display: flex;
     justify-content: space-between;
