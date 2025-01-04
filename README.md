@@ -15,7 +15,7 @@ A continuación se explican los pasos necesarios para configurar el entorno y ej
     ```bash
     git clone https://github.com/gerardorosales2222/alquiler_ropa.git
 
-    cd alquiler_ropa.git
+    cd alquiler_ropa
     ```
 
 2. Crea un entorno virtual:
