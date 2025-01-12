@@ -100,29 +100,11 @@ def trajes(request):
 @login_required
 def nuevo_traje(request):
     if request.method == 'POST':
-        traje_form = TrajeForm(request.POST)
-        pantalon_form = PantalonForm(request.POST)
-        saco_form = SacoForm(request.POST)
-        
-        if traje_form.is_valid() and pantalon_form.is_valid() and saco_form.is_valid():
-            traje = traje_form.save()
-            pantalon = pantalon_form.save(commit=False)
-            saco = saco_form.save(commit=False)
-            pantalon.traje = traje
-            saco.traje = traje
-            pantalon.save()
-            saco.save()
-            return redirect('trajes')
+        traje_form = Traje.objects.create(nro_articulo=request.POST['nro_articulo'])
+        return redirect('trajes')
     else:
-        traje_form = TrajeForm()
-        pantalon_form = PantalonForm()
-        saco_form = SacoForm()
-        
-    return render(request, 'nuevo_traje.html', {
-        'traje_form': traje_form,
-        'pantalon_form': pantalon_form,
-        'saco_form': saco_form,
-    })
+        context = {'nro_articulo': ''}
+    return render(request, 'add_traje.html', context)
 
 @login_required
 def prendas(request):

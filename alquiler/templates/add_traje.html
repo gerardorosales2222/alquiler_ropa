@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+{% block title %}Nuevo Traje{% endblock %}
+{% block content %}
+<main class="container">
+    <h1>Nuevo Traje</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="campo">
+            <label for="nro">Nro. de Artículo</label>
+            <input type="number" id="nro" name="nro_articulo" class="form-control" placeholder="Nro. de Artículo">
+        </div>
+        <button class="btn btn-primary" type="submit">Crear</button>
+    </form>
+</main>
+
+{% endblock %}

@@ -3,7 +3,9 @@
 {% block content %}
 <main class="container">
     <h1>Nueva Prenda</h1>
-    <h5>ATENCIÓN: No cargar Pantalón ni Saco. Ya que eso se carga en Trajes.</h5>
+    <div class="alert alert-dark" role="alert">
+        <h6>ATENCIÓN: No cargar Pantalón ni Saco. Ya que eso se carga en Trajes.</h6>
+    </div>
     <form method="post">
         {% csrf_token %}
         <div class="campo">
