@@ -90,12 +90,13 @@ def clientes(request):
 
 @login_required
 def trajes(request):
+    colores = Color.objects.all()
     query = request.GET.get('q', '')
     if query:
-        trajes = Traje.objects.filter(nro_articulo__icontains=query)
+        trajes = Traje.objects.filter(nro_articulo__icontains=query).order_by('nro_articulo')
     else:
-        trajes = Traje.objects.all()
-    return render(request, 'trajes.html', {'trajes': trajes, 'query': query})
+        trajes = Traje.objects.all().order_by('nro_articulo')
+    return render(request, 'trajes.html', {'trajes': trajes, 'query': query, 'colores': colores})
 
 @login_required
 def nuevo_traje(request):
