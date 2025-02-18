@@ -1,0 +1,68 @@
+{% extends 'layout.html' %}
+{% block title %}Alquileres Activos para Devolución{% endblock %}
+{% block content %}
+<main class="container">
+
+    <h2>Alquileres Activos (Para Devolución)</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Cliente</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for alquiler in alquileres %}
+                {% if alquiler.estado == 'alquilado' %}
+                    <tr>
+                        <td>{{ alquiler.id }}</td>
+                        <td>{{ alquiler.fecha_alquiler }}</td>
+                        <td>{{ alquiler.cliente }}</td>
+                        <td>{{ alquiler.estado }}</td>
+                        <td>
+                            <form method="post" action="{% url 'registrar_devolucion' alquiler.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success" onclick="return confirm('¿Está seguro de que desea registrar la devolución de este alquiler?')">Registrar Devolución</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Reservados</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Cliente</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for alquiler in alquileres %}
+                {% if alquiler.estado == 'reservado' %}
+                    <tr>
+                        <td>{{ alquiler.id }}</td>
+                        <td>{{ alquiler.fecha_alquiler }}</td>
+                        <td>{{ alquiler.cliente }}</td>
+                        <td>{{ alquiler.estado }}</td>
+                        <td>
+                            <form method="post" action="{% url 'cancelar_reserva' alquiler.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('¿Está seguro de que desea cancelar esta reserva?')">Cancelar Reserva</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+</main>
+{% endblock %}

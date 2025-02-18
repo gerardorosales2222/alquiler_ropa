@@ -1,45 +1,114 @@
 {% extends 'layout.html' %}
-{% load static %}
-{% block title %}Registrar Alquiler{% endblock %}
+
 {% block content %}
-<!-- Autocomplete Dropdown using HTML5 Datalist -->
-<main class="container">
-    <br>
-    <h1>Registrar Alquiler</h1>
-<form method="post">
-    {% csrf_token %}
-    <div class="campo">
-        <label for="cli">Cliente</label>
-        <input id="cli" name="cliente" type="text" list="clientes_list" class="form-control" placeholder="nombre o apellido">
-        <datalist id="clientes_list">
-        {% for cliente in clientes %}
-            <option value="{{ cliente.id }} {{ cliente.nombre }} {{ cliente.apellido }}">
-        {% endfor %}
-        </datalist>
-    </div>
-    <div id="prendas-container">
-        <div class="campo prenda-item">
-            <label for="prenda">Prenda</label>
-            <input name="prendas" type="text" list="prendas_list" class="form-control" placeholder="cod, categoría o color">
-            <datalist id="prendas_list">
-            {% for prenda in prendas %}
-                <option value="{{ prenda.id }} {{ prenda.categoria }} {{ prenda.color }}">
-            {% endfor %}
-            </datalist>
+  <div class="container">
+    <h2>Registrar Alquiler</h2>
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label for="{{ form.cliente.id_for_label }}" class="form-label">{{ form.cliente.label }}</label>
+        {{ form.cliente }}
+        {% if form.cliente.errors %}
+          <div class="alert alert-danger">
+            {{ form.cliente.errors }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label for="{{ form.sacos.id_for_label }}" class="form-label">{{ form.sacos.label }}</label>
+        {{ form.sacos }}
+        {% if form.sacos.errors %}
+          <div class="alert alert-danger">
+            {{ form.sacos.errors }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label for="{{ form.pantalones.id_for_label }}" class="form-label">{{ form.pantalones.label }}</label>
+        {{ form.pantalones }}
+        {% if form.pantalones.errors %}
+          <div class="alert alert-danger">
+            {{ form.pantalones.errors }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label for="{{ form.prendas.id_for_label }}" class="form-label">{{ form.prendas.label }} (Otras Prendas)</label>
+        {{ form.prendas }}
+        {% if form.prendas.errors %}
+          <div class="alert alert-danger">
+            {{ form.prendas.errors }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label for="{{ form.trajes.id_for_label }}" class="form-label">{{ form.trajes.label }}</label>
+        {{ form.trajes }}
+        {% if form.trajes.errors %}
+          <div class="alert alert-danger">
+            {{ form.trajes.errors }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label for="{{ form.fecha_alquiler.id_for_label }}" class="form-label">{{ form.fecha_alquiler.label }}</label>
+        {{ form.fecha_alquiler }}
+        {% if form.fecha_alquiler.errors %}
+          <div class="alert alert-danger">
+            {{ form.fecha_alquiler.errors }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label for="{{ form.precio_alquiler.id_for_label }}" class="form-label">{{ form.precio_alquiler.label }}</label>
+        {{ form.precio_alquiler }}
+        {% if form.precio_alquiler.errors %}
+          <div class="alert alert-danger">
+            {{ form.precio_alquiler.errors }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label for="{{ form.estado.id_for_label }}" class="form-label">{{ form.estado.label }}</label>
+        {{ form.estado }}
+        {% if form.estado.errors %}
+          <div class="alert alert-danger">
+            {{ form.estado.errors }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label for="{{ form.seña.id_for_label }}" class="form-label">{{ form.seña.label }}</label>
+        {{ form.seña }}
+        {% if form.seña.errors %}
+          <div class="alert alert-danger">
+            {{ form.seña.errors }}
+          </div>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="btn btn-primary">Registrar</button>
+    </form>
+
+    {% if form.errors and not form.non_field_errors %}
+        <div class="alert alert-danger">
+            Por favor, corrige los errores en el formulario.
         </div>
-    </div>
-    <button type="button" onclick="addPrenda()">Agregar Prenda</button>
-    <button class="btn btn-primary" type="submit">Guardar</button>
-</form>
+    {% endif %}
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
 
-<script>
-    function addPrenda() {
-        var container = document.getElementById('prendas-container');
-        var newPrenda = container.firstElementChild.cloneNode(true);
-        container.appendChild(newPrenda);
-    }
-</script>
-
-
-</main>
+  </div>
 {% endblock %}

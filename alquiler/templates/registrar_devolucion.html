@@ -1,11 +1,32 @@
 {% extends 'layout.html' %}
-{% block title %}Clientes{% endblock %}
+{% block title %}Alquileres Activos para Devolución{% endblock %}
 {% block content %}
 <main class="container">
-    <h1>Registrar Devolución</h1>
-    <form method="post"> {% csrf_token %} 
-        <p>¿Está seguro de que desea registrar la devolución de este alquiler?</p> 
-        <button type="submit">Registrar Devolución</button>
-    </form>    
+    <h1>Alquileres Activos para Devolución</h1>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Cliente</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for alquiler in alquileres %}
+            <tr>
+                <td>{{ alquiler.id }}</td>
+                <td>{{ alquiler.fecha_alquiler }}</td>
+                <td>{{ alquiler.cliente }}</td>
+                <td>{{ alquiler.estado }}</td>
+                <td>
+                    <a href="{% url 'registrar_devolucion' alquiler.id %}" class="btn btn-success">Registrar Devolución</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </main>
 {% endblock %}

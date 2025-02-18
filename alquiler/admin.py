@@ -63,14 +63,6 @@ class TrajeAdmin(admin.ModelAdmin):
     list_filter = ('nro_articulo',)
 
 
+@admin.register(Alquiler)
 class AlquilerAdmin(admin.ModelAdmin):
-    list_display = ('cliente', 'mostrar_prendas', 'mostrar_trajes','mostrar_pantalones','mostrar_sacos','fecha_alquiler', 'precio_alquiler', 'estado', 'seña', 'usuario')
-    exclude = ('usuario',)
-    autocomplete_fields = ['cliente','prenda']
-
-    def save_model(self, request, obj, form, change):
-        if not obj.pk:
-            obj.usuario = request.user
-        super().save_model(request, obj, form, change)
-        
-admin.site.register(Alquiler, AlquilerAdmin)
+    list_display = ('cliente', 'fecha_alquiler', 'precio_alquiler')

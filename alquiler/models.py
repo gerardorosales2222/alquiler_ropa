@@ -75,7 +75,12 @@ class Prenda(models.Model):
     reparacion = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'nro_artículo: {self.id}, {self.categoria}, {self.color}, {self.talle}'
+        descripcion = f'Talle: {self.talle}, Color: {self.color}'
+        if self.categoria.nombre == 'General' and self.descripcion:
+            descripcion = f'{self.descripcion}, {descripcion}'
+        elif self.categoria.nombre in ['Pantalon', 'Saco']:
+            descripcion = f'Nro Artículo: {self.id}, {descripcion}'
+        return descripcion
 
     def nro_articulo(self):
         return self.id
@@ -90,20 +95,34 @@ class Prenda(models.Model):
     
 class Traje(models.Model):
     nro_articulo = models.CharField(max_length=20, unique=True)
-    
+    prendas = models.ManyToManyField('Prenda', blank=True, related_name='trajes')
+    disponible = models.BooleanField(default=True) # Agregado el campo disponible
+
     def mostrar_pantalon(self):
-        pantalon = self.pantalon_set.first()
-        return f'{pantalon.id}.- Talle {pantalon.talle_pantalon} - {pantalon.color_pantalon} - Disponible: {pantalon.disponible}' if pantalon else 'No asociado'
-    mostrar_pantalon.short_description = 'Pantalón'
+        # Obtener el primer pantalón asociado al traje
+        pantalon = self.prendas.filter(categoria__nombre='Pantalon').first()
+
+        if pantalon:
+            return f'{pantalon.id}.- Talle {pantalon.talle} - {pantalon.color} - Disponible: {pantalon.disponible}'
+        else:
+            return 'No asociado'
+
+    mostrar_pantalon.short_description = 'Pantalon'
 
     def mostrar_saco(self):
-        saco = self.saco_set.first()
-        return f'{saco.id}.- {saco.talle_saco} - {saco.color_saco} - Disponible: {saco.disponible}' if saco else 'No asociado'
+        # Obtener el primer saco asociado al traje
+        saco = self.prendas.filter(categoria__nombre='Saco').first()
+
+        if saco:
+            return f'{saco.id}.- Talle {saco.talle} - {saco.color} - Disponible: {saco.disponible}'
+        else:
+            return 'No asociado'
+
     mostrar_saco.short_description = 'Saco'
-    
+
     def __str__(self):
         return f'{self.nro_articulo}'
-    
+
     class Meta:
         db_table = 'traje'
         verbose_name = 'traje'
@@ -143,50 +162,48 @@ class Saco(models.Model):
 
 class Alquiler(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
-    prenda = models.ManyToManyField(Prenda, blank=True)
-    saco = models.ManyToManyField(Saco, blank=True)
-    pantalon = models.ManyToManyField(Pantalon, blank=True)
-    traje = models.ManyToManyField(Traje, blank=True)
+    prenda = models.ManyToManyField('Prenda', blank=True, related_name='alquileres')
+    traje = models.ManyToManyField('Traje', blank=True, related_name='alquileres')
     fecha_alquiler = models.DateField()
+    fecha_devolucion = models.DateField(null=True, blank=True)
     precio_alquiler = models.DecimalField(max_digits=10, decimal_places=2)
     estado = models.CharField(max_length=20, choices=[
         ('reservado', 'Reservado'),
         ('alquilado', 'Alquilado'),
+        ('devuelto', 'Devuelto'),
     ], default='reservado')
     seña = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True)
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
-    
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        
-        # Luego verifica la disponibilidad de los pantalones y sacos
-        for pantalon in self.pantalon.all():
-            if not pantalon.disponible:
-                raise ValueError(f'El pantalón {pantalon} no está disponible para alquilar.')
-            pantalon.disponible = False
-            pantalon.save()
-
-        for saco in self.saco.all():
-            if not saco.disponible:
-                raise ValueError(f'El saco {saco} no está disponible para alquilar.')
-            saco.disponible = False
-            saco.save()
 
     def mostrar_prendas(self):
-        return ", ".join([p.descripcion for p in self.prenda.all()])
+        return ", ".join([str(p) for p in self.prenda.all()])
+
     mostrar_prendas.short_description = 'Prendas'
-    
+
     def mostrar_trajes(self):
-        return ", ".join([f'{t.nro_articulo} (P {t.mostrar_pantalon()} | S {t.mostrar_saco()})' for t in self.traje.all()])
-    mostrar_trajes.short_description = 'Traje/s'
-    
+        return ", ".join([str(t) for t in self.traje.all()])
+
+    mostrar_trajes.short_description = 'Trajes'
+
     def mostrar_pantalones(self):
-        return ", ".join([f'Talle {p.talle_pantalon}, {p.color_pantalon}, Traje {p.traje}' for p in self.pantalon.all()])
-    mostrar_pantalones.short_description = 'Pantalon/es'
-    
+        pantalones = []
+        for traje in self.traje.all():
+            for prenda in traje.prendas.all():
+                if prenda.categoria.nombre == 'Pantalon':
+                    pantalones.append(str(prenda))
+        return ", ".join(pantalones)
+
+    mostrar_pantalones.short_description = 'Pantalones'
+
     def mostrar_sacos(self):
-        return ", ".join([f'Talle {s.talle_saco}, {s.color_saco}, Traje {s.traje}' for s in self.saco.all()])
-    mostrar_sacos.short_description = 'Saco/s'
+        sacos = []
+        for traje in self.traje.all():
+            for prenda in traje.prendas.all():
+                if prenda.categoria.nombre == 'Saco':
+                    sacos.append(str(prenda))
+        return ", ".join(sacos)
+
+    mostrar_sacos.short_description = 'Sacos'
 
     def __str__(self):
         return f'{self.fecha_alquiler}, {self.estado}, {self.cliente.nombre}, {self.cliente.apellido}'

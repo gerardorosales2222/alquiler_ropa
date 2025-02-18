@@ -4,10 +4,11 @@
 <main class="container">
     <div class="extremos">
         <h1>Trajes</h1>
-        <ul> {% for traje in trajes %} 
+        <ul>
+            {% for traje in trajes %}
             {% empty %}
-            <span class="alert alert-light" role="alert">No se encontró traje con ese nro de artículo</li> 
-                {% endfor %} 
+            <span class="alert alert-light" role="alert">No se encontró traje con ese nro de artículo</li>
+            {% endfor %}
         </ul>
     </div>
     <a href="{% url 'nuevo_traje' %}"><button class="btn btn-primary" type="submit">Nuevo Traje</button></a>
@@ -29,74 +30,17 @@
             </tr>
         </thead>
         <tbody>
-          {% for traje in trajes %}
-          <tr>
-              <td>{{ traje.nro_articulo }}</td>
-              <td>{{ traje.mostrar_pantalon }}</td>
-              <td>{{ traje.mostrar_saco }}</td>
-              <td>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    Asociar
-                </button>
+            {% for traje in trajes %}
+            <tr>
+                <td>{{ traje.nro_articulo }}</td>
+                <td>{{ traje.mostrar_pantalon }}</td>
+                <td>{{ traje.mostrar_saco }}</td>
+                <td>
+                   <a href="{% url 'listar_pantalones' traje_id=traje.id %}" class="btn btn-primary">Asociar</a>
                </td>
-          </tr>
-          {% endfor %}
+            </tr>
+            {% endfor %}
         </tbody>
-      </table>      
-
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Asociar Pantalón y/o Saco</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="campo">
-                        <label>Color del pantalón</label>
-                        <input type="text" list="color_list" id="color" class="form-control" placeholder="Color" required>
-                        <datalist id="color_list">
-                        {% for color in colores %}
-                            <option value="{{ color.nombre }}" data-id="{{ color.id }}">{{ color.nombre }}</option>
-                        {% endfor %}
-                        </datalist>
-                        <input type="hidden" name="color_id" id="color_hidden">
-                    </div>
-
-                    <button class="btn btn-primary" type="submit">Guardar</button>
-                </form>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary">Guardar cambios</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    </table>
 </main>
-
-<script>
-    function handleDatalistInput(e) {
-        var value = e.target.value;
-        var list = e.target.list;
-        var options = list.childNodes;
-        var hiddenInputId = e.target.id + '_hidden';
-        var hiddenInput = document.getElementById(hiddenInputId);
-
-        if (hiddenInput) {
-            for (var i = 0; i < options.length; i++) {
-                if (options[i].value === value) {
-                    hiddenInput.value = options[i].dataset.id;
-                    break;
-                }
-            }
-        }
-    }
-
-    document.querySelector('#color').addEventListener('input', handleDatalistInput);
-</script>
-
 {% endblock %}

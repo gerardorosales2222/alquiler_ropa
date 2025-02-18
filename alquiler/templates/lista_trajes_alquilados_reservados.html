@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+{% block title %}Trajes Alquilados/Reservados{% endblock %}
+{% block content %}
+<main class="container">
+    <h1>Trajes Alquilados/Reservados</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Nro. Artículo</th>
+                <th scope="col">Pantalón</th>
+                <th scope="col">Saco</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for traje in trajes %}
+                <tr>
+                    <td>{{ traje.nro_articulo }}</td>
+                    <td>{{ traje.mostrar_pantalon }}</td>
+                    <td>{{ traje.mostrar_saco }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</main>
+{% endblock %}

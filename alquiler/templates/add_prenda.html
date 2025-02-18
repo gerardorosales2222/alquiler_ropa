@@ -9,24 +9,22 @@
     <form method="post">
         {% csrf_token %}
         <div class="campo">
-            <label>Categoría</label>
-            <input type="text" list="categoria_list" id="categoria" class="form-control" placeholder="Categoría" required>
-            <datalist id="categoria_list">
-            {% for categoria in categorias %}
-                <option value="{{ categoria.nombre }}" data-id="{{ categoria.id }}">{{ categoria.nombre }}</option>
-            {% endfor %}
-            </datalist>
-            <input type="hidden" name="categoria_id" id="categoria_hidden">
+            <label for="categoria">Categoría</label>
+            <select id="categoria" name="categoria_id" class="form-control" required>
+                <option value="" disabled selected>Seleccione una categoría</option>
+                {% for categoria in categorias %}
+                    <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+                {% endfor %}
+            </select>
         </div>
         <div class="campo">
-            <label>Color de la prenda</label>
-            <input type="text" list="color_list" id="color" class="form-control" placeholder="Color" required>
-            <datalist id="color_list">
-            {% for color in colores %}
-                <option value="{{ color.nombre }}" data-id="{{ color.id }}">{{ color.nombre }}</option>
-            {% endfor %}
-            </datalist>
-            <input type="hidden" name="color_id" id="color_hidden">
+            <label for="color">Color de la prenda</label>
+            <select id="color" name="color_id" class="form-control" required>
+                <option value="" disabled selected>Seleccione un color</option>
+                {% for color in colores %}
+                    <option value="{{ color.id }}">{{ color.nombre }}</option>
+                {% endfor %}
+            </select>
         </div>
         <div class="campo">
             <label>Descripción</label>
@@ -34,47 +32,28 @@
         </div>
         <div class="campo">
             <label for="busto">Busto</label>
-            <input type="number" id="busto" name="busto" class="form-control" name="busto" placeholder="Busto">
-        </div>    
+            <input type="number" id="busto" name="busto" class="form-control" placeholder="Busto">
+        </div>
         <div class="campo">
             <label for="cintura">Cintura</label>
-            <input type="number" id="cintura" name="cintura" class="form-control" name="cintura" placeholder="Cintura">
-        </div>    
+            <input type="number" id="cintura" name="cintura" class="form-control" placeholder="Cintura">
+        </div>
         <div class="campo">
             <label for="cadera">Cadera</label>
-            <input type="number" id="cadera" name="cadera" class="form-control" name="cadera" placeholder="Cadera">
-        </div>    
+            <input type="number" id="cadera" name="cadera" class="form-control" placeholder="Cadera">
+        </div>
         <div class="campo">
             <label for="largo">Largo(cm)</label>
-            <input type="number" id="largo" name="largo" class="form-control" name="largo" placeholder="Largo">
-        </div>    
+            <input type="number" id="largo" name="largo" class="form-control" placeholder="Largo">
+        </div>
         <div class="campo">
             <label for="talle">Talle</label>
-            <input type="text" id="talle" name="talle" class="form-control" name="talle" placeholder="Talle">
+            <input type="text" id="talle" name="talle" class="form-control" placeholder="Talle">
         </div>
         <button class="btn btn-primary" type="submit">Guardar</button>
     </form>
+    {% if error_message %}
+        <div class="alert alert-danger">{{ error_message }}</div>
+    {% endif %}
 </main>
-
-<script>
-    function handleDatalistInput(e) {
-        var value = e.target.value;
-        var list = e.target.list;
-        var options = list.childNodes;
-        var hiddenInputId = e.target.id + '_hidden';
-        var hiddenInput = document.getElementById(hiddenInputId);
-
-        if (hiddenInput) {
-            for (var i = 0; i < options.length; i++) {
-                if (options[i].value === value) {
-                    hiddenInput.value = options[i].dataset.id;
-                    break;
-                }
-            }
-        }
-    }
-
-    document.querySelector('#color').addEventListener('input', handleDatalistInput);
-    document.querySelector('#categoria').addEventListener('input', handleDatalistInput);
-</script>
 {% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+{% block title %}Cancelar Reserva{% endblock %}
+{% block content %}
+<main class="container">
+    <h1>Cancelar Reserva</h1>
+    <p>¿Está seguro de que desea cancelar la reserva del alquiler con ID {{ alquiler.id }}?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Confirmar Cancelación</button>
+        <a href="{% url 'lista_alquileres_activos_devolucion' %}" class="btn btn-secondary">Volver</a>
+    </form>
+</main>
+{% endblock %}

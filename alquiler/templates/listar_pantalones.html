@@ -1,0 +1,44 @@
+{% extends 'layout.html' %}
+{% block title %}Listado de Prendas Disponibles{% endblock %}
+{% block content %}
+<main class="container">
+    <h1>Prendas Disponibles para Traje {{ traje.nro_articulo }}</h1>
+
+    <form method="post" action="{% url 'asociar_prenda' %}">
+        {% csrf_token %}
+        <input type="hidden" name="traje_id" value="{{ traje.id }}">
+
+        <div class="mb-3">
+            <label for="pantalon" class="form-label">Pantalón</label>
+            <select class="form-select" id="pantalon" name="pantalon_id">  {# Cambiado a "pantalon_id" #}
+                <option value="">--- Seleccionar Pantalón ---</option>
+                {% for prenda in prendas %}
+                    {% if prenda.categoria.nombre == 'Pantalon' %}
+                        <option value="{{ prenda.id }}">{{ prenda }}: {{ prenda.descripcion|default:"Sin descripción" }}</option>
+                    {% endif %}
+                {% empty %}
+                   <option value="">No hay pantalones disponibles.</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="saco" class="form-label">Saco</label>
+            <select class="form-select" id="saco" name="saco_id">  {# Cambiado a "saco_id" #}
+                <option value="">--- Seleccionar Saco ---</option>
+                {% for prenda in prendas %}
+                    {% if prenda.categoria.nombre == 'Saco' %}
+                        <option value="{{ prenda.id }}">{{ prenda }}: {{ prenda.descripcion|default:"Sin descripción" }}</option>
+                    {% endif %}
+                {% empty %}
+                    <option value="">No hay sacos disponibles.</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Asociar Prenda</button>
+    </form>
+
+    <a href="{% url 'trajes' %}" class="btn btn-secondary">Volver a Trajes</a>
+</main>
+{% endblock %}
