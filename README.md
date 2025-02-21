@@ -4,7 +4,7 @@ A continuación se explican los pasos necesarios para configurar el entorno y ej
 
 ## Requisitos previos
 
-- [Python 3.12.8] (https://www.python.org/ftp/python/3.12.8/python-3.12.8-amd64.exe)
+- [Python 3.12.8](https://www.python.org/ftp/python/3.12.8/python-3.12.8-amd64.exe)
 - pip
 - virtualenv
 
