@@ -4,7 +4,7 @@ A continuación se explican los pasos necesarios para configurar el entorno y ej
 
 ## Requisitos previos
 
-- Python 3.x
+- Python 3.12.8
 - pip
 - virtualenv
 
